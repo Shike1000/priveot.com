@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editor de Código</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Editor de Proyecto</h1>
+    <div class="options">
+      <label>
+        Visibilidad:
+        <select id="visibility">
+          <option value="private">Privado</option>
+          <option value="public">Público</option>
+        </select>
+      </label>
+
+      <div id="userInfo">
+        <button id="loginBtn">Iniciar sesión con GitHub</button>
+      </div>
+
+      <label>
+        Guardado automático:
+        <input type="checkbox" id="autosave" />
+      </label>
+
+      <button id="saveBtn">Guardar</button>
+      <button id="runBtn">▶ Ejecutar</button>
+      <button id="stopBtn">⏹ Detener</button>
+      <button id="clearBtn">🧹 Limpiar salida</button>
+    </div>
+  
+  </header>
+
+  <main>
+    <textarea id="codeEditor" spellcheck="false" placeholder="// Escribe tu código aquí..."></textarea>
+  </main>
+
+  <section id="consolePanel">
+    <div class="console-header">
+      <span>Consola</span>
+      <button id="popOutBtn">🧭 Abrir en ventana nueva</button>
+    </div>
+    <pre id="consoleOutput">// Aquí aparecerán los mensajes de salida y errores...</pre>
+  </section>
+
+  <footer>
+    <span id="status">Editor cargado correctamente</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

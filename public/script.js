@@ -14,6 +14,17 @@ const userInfo = document.getElementById("userInfo");
 let autosaveInterval = null;
 let popOutWindow = null;
 
+// Cargar código inicial al iniciar
+fetch("/api/code")
+  .then(res => res.json())
+  .then(data => {
+    editor.value = data.code || "";
+    visibility.value = data.visibility || "private";
+  })
+  .catch(err => {
+    console.error("Error al cargar código:", err);
+  });
+
 saveBtn.addEventListener("click", () => {
   saveCode();
 });
@@ -29,7 +40,7 @@ autosave.addEventListener("change", () => {
 });
 
 runBtn.addEventListener("click", () => {
-  simulateExecution();
+  executeCode();
 });
 
 stopBtn.addEventListener("click", () => {
@@ -62,16 +73,41 @@ popOutBtn.addEventListener("click", () => {
 function saveCode(auto = false) {
   const code = editor.value;
   const visibilitySetting = visibility.value;
-  console.log(`[${auto ? "Auto" : "Manual"}] Guardado:`, code, visibilitySetting);
-  status.innerText = auto ? "Guardado automático realizado" : "Guardado manual realizado";
+
+  fetch("/api/code", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code, visibility: visibilitySetting })
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Error al guardar");
+      return res.json();
+    })
+    .then(() => {
+      status.innerText = auto ? "Guardado automático realizado" : "Guardado manual realizado";
+    })
+    .catch(err => {
+      console.error(err);
+      status.innerText = "Error al guardar";
+    });
 }
 
-function simulateExecution() {
+function executeCode() {
+  const code = editor.value;
+
   appendToConsole("// Ejecutando código...");
-  setTimeout(() => {
-    const fakeOutput = `>> Resultado de ejecución: ${Math.floor(Math.random() * 1000)}`;
-    appendToConsole(fakeOutput);
-  }, 1000);
+  fetch("/api/run", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code })
+  })
+    .then(res => res.json())
+    .then(data => {
+      appendToConsole(data.output || "// Sin salida");
+    })
+    .catch(err => {
+      appendToConsole("❌ Error de ejecución: " + err.message);
+    });
 }
 
 function appendToConsole(msg) {
@@ -95,9 +131,13 @@ fetch("/user")
   })
   .then((user) => {
     userInfo.innerHTML = `
-      <img src="${user.avatar_url}" alt="avatar" style="height:30px; border-radius:50%;" />
+      <img src="${user.avatar_url}" alt="avatar" />
       <span>${user.login}</span>
+      <button class="logoutBtn" id="logoutBtn">Cerrar sesión</button>
     `;
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      window.location.href = "/logout";
+    });
   })
   .catch(() => {
     userInfo.innerHTML = `<button id="loginBtn">Iniciar sesión con GitHub</button>`;
@@ -105,3 +145,11 @@ fetch("/user")
       window.location.href = "/login";
     });
   });
+
+
+const sidebar = document.getElementById("sidebar");
+const toggleSidebar = document.getElementById("toggleSidebar");
+
+toggleSidebar.addEventListener("click", () => {
+  sidebar.classList.toggle("collapsed");
+});

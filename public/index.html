@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Editor de Código</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=2" />
 </head>
 <body>
   <header>
@@ -18,10 +18,6 @@
         </select>
       </label>
 
-      <div id="userInfo">
-        <button id="loginBtn">Iniciar sesión con GitHub</button>
-      </div>
-
       <label>
         Guardado automático:
         <input type="checkbox" id="autosave" />
@@ -31,9 +27,25 @@
       <button id="runBtn">▶ Ejecutar</button>
       <button id="stopBtn">⏹ Detener</button>
       <button id="clearBtn">🧹 Limpiar salida</button>
+
+      <div id="userInfo">
+        <button id="loginBtn">Iniciar sesión con GitHub</button>
+      </div>
+
     </div>
-  
   </header>
+
+  <div class="container">
+    <aside id="sidebar">
+      <button id="toggleSidebar">☰</button>
+      <h3>Estructura</h3>
+      <ul id="fileList">
+        <li>main.js</li>
+        <li>utils.js</li>
+        <li>style.css</li>
+        <!-- Puedes poblar esto con JS luego -->
+      </ul>
+    </aside>
 
   <main>
     <textarea id="codeEditor" spellcheck="false" placeholder="// Escribe tu código aquí..."></textarea>
@@ -51,6 +63,7 @@
     <span id="status">Editor cargado correctamente</span>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=2"></script>
 </body>
 </html>
+
